@@ -1,6 +1,6 @@
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f3f4f6;
+    background-color: #4471c9;
     display: flex;
     justify-content: center;
     padding-top: 50px;
@@ -13,8 +13,33 @@ body {
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 480px;
     text-align: center;
+}
+
+/* Flight data table inside the card */
+.flight-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.flight-table th {
+    color: #6b7280;
+    font-weight: 600;
+    padding: 4px 8px;
+    width: 140px;
+}
+
+.flight-table td {
+    color: #1f2937;
+    padding: 4px 8px;
+}
+
+.flight-table tr:nth-child(even) {
+    background-color: #f3f4f6;
 }
 
 h1 {
@@ -33,7 +58,7 @@ button {
     background-color: #3b82f6;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
@@ -65,4 +90,76 @@ button:hover {
 .user-email {
     font-size: 0.85rem;
     color: #6b7280;
+}
+
+/* Tab Styles */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    color: #6b7280;
+    padding: 8px 16px;
+    border-radius: 0;
+    font-weight: 500;
+}
+
+.tab-btn:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.tab-btn.active {
+    color: #2563eb;
+    border-bottom: 2px solid #2563eb;
+    margin-bottom: -12px;
+}
+
+/* Form Styles */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+#formStatus {
+    margin-top: 15px;
+    font-size: 0.85rem;
+}
+
+/* Selector Button Styles */
+.selector-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+button.selected {
+    background-color: #2563eb;
+    color: white;
+    border-color: #1e40af;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }

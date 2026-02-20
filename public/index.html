@@ -1,25 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supabase + Vercel Demo</title>
+    <title>Flight Data Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-
     <div class="container">
-        <h1>User Directory</h1>
-        <p class="subtitle">Data fetched from Supabase via Vercel Serverless Function</p>
+        <h1>Flight Data Dashboard</h1>
 
-        <button id="loadBtn">Load Users</button>
+        <div class="tabs">
+            <button id="viewTabBtn" class="tab-btn active">View Flights</button>
+            <button id="addTabBtn" class="tab-btn">Add Flight Record</button>
+        </div>
 
-        <div id="userList" class="user-list">
-            <!-- Users will appear here -->
+        <!-- VIEW SECTION -->
+        <div id="viewSection" class="section">
+            <p class="subtitle">Select a flight record to view</p>
+            <div class="selector-group">
+                <button id="pickUserBtn1">1</button>
+                <button id="pickUserBtn2">2</button>
+                <button id="pickUserBtn3">3</button>
+                <button id="pickUserBtn4">4</button>
+                <button id="pickUserBtn5">5</button>
+                <button id="pickUserBtn6">6</button>
+            </div>
+            <button id="loadBtn">Load Flight Record</button>
+            <div id="userList" class="user-list"></div>
+        </div>
+
+        <!-- ADD SECTION -->
+        <div id="addSection" class="section" style="display:none;">
+            <p class="subtitle">Add a new flight record to the database</p>
+            <div class="form-group">
+                <input type="number" id="newFlightNumber" placeholder="Flight Number">
+                <input type="text" id="newDroneType" placeholder="Drone Type">
+                <input type="datetime-local" id="newCurrentTime" placeholder="Current Time">
+                <input type="number" step="any" id="newPowerWatts" placeholder="Power (Watts)">
+                <input type="number" step="any" id="newCurrentAmps" placeholder="Current (Amps)">
+                <input type="number" step="any" id="newBatteryTemp" placeholder="Battery Temp (°C)">
+                <input type="number" step="any" id="newAmbiantTemp" placeholder="Ambient Temp (°C)">
+                <input type="number" step="any" id="newAirSpeed" placeholder="Air Speed (m/s)">
+                <input type="number" step="any" id="newWindDirection" placeholder="Wind Direction (rad)">
+                <input type="number" step="any" id="newWindSpeed" placeholder="Wind Speed (m/s)">
+                <button id="submitBtn">Save Flight Record</button>
+            </div>
+            <div id="formStatus"></div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
+
 </html>

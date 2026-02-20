@@ -3,5 +3,11 @@
     "version": "1.0.0",
     "dependencies": {
         "@supabase/supabase-js": "^2.39.0"
+    },
+    "scripts": {
+        "local": "vercel dev"
+    },
+    "devDependencies": {
+        "vercel": "^50.15.1"
     }
 }
