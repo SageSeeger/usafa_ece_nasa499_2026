@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     const {
         flight_number,
         drone_type,
-        current_time,
+        flight_time,
         power_watts,
         current_amps,
         batteryTemp,
@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
             .insert([{
                 flight_number,
                 drone_type,
-                current_time,
+                flight_time,
                 power_watts,
                 current_amps,
                 batteryTemp,
