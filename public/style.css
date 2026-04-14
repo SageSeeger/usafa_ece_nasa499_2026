@@ -1,290 +1,48 @@
+/* ── Base ─────────────────────────────────────────────────────────────────── */
 body {
     font-family: 'Inter', sans-serif;
     background-color: #4471c9;
     display: flex;
     justify-content: center;
-    padding-top: 50px;
+    padding: 50px 16px 80px;
     margin: 0;
     color: #1f2937;
+    min-height: 100vh;
 }
 
 .container {
     background: white;
     padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    width: 480px;
-    text-align: center;
-}
-
-/* Flight data table inside the card */
-.flight-table {
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 12px;
-    font-size: 0.88rem;
-    text-align: left;
+    max-width: 640px;
 }
 
-.flight-table th {
-    color: #6b7280;
-    font-weight: 600;
-    padding: 4px 8px;
-    width: 140px;
-}
-
-.flight-table td {
-    color: #1f2937;
-    padding: 4px 8px;
-}
-
-.flight-table tr:nth-child(even) {
-    background-color: #f3f4f6;
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+.header {
+    text-align: center;
+    margin-bottom: 1.8rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1.2rem;
 }
 
 h1 {
-    margin: 0;
-    font-size: 1.5rem;
+    margin: 0 0 6px;
+    font-size: 1.6rem;
     color: #111827;
 }
 
 .subtitle {
     color: #6b7280;
-    margin-bottom: 1.5rem;
     font-size: 0.9rem;
+    margin: 0;
 }
 
-button {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-button:hover {
-    background-color: #2563eb;
-}
-
-.user-list {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.user-card {
-    background: #f9fafb;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    border: 1px solid #e5e7eb;
-}
-
-.user-name {
-    font-weight: 600;
-    display: block;
-}
-
-.user-email {
-    font-size: 0.85rem;
-    color: #6b7280;
-}
-
-/* Tab Styles */
-.tabs {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 10px;
-}
-
-.tab-btn {
-    background: none;
-    color: #6b7280;
-    padding: 8px 16px;
-    border-radius: 0;
-    font-weight: 500;
-}
-
-.tab-btn:hover {
-    background: #f3f4f6;
-    color: #1f2937;
-}
-
-.tab-btn.active {
-    color: #2563eb;
-    border-bottom: 2px solid #2563eb;
-    margin-bottom: -12px;
-}
-
-/* Form Styles */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 300px;
-    margin: 0 auto;
-}
-
-input {
-    padding: 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-
-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-#formStatus {
-    margin-top: 15px;
-    font-size: 0.85rem;
-}
-
-/* Selector Button Styles */
-.selector-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-button.selected {
-    background-color: #2563eb;
-    color: white;
-    border-color: #1e40af;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* View mode toggle (DB vs CSV) */
-.view-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.mode-btn {
-    background: #f3f4f6;
-    color: #6b7280;
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    border-radius: 20px;
-}
-
-.mode-btn:hover {
-    background: #e5e7eb;
-    color: #1f2937;
-}
-
-.mode-btn.active {
-    background: #3b82f6;
-    color: white;
-}
-
-/* CSV Upload Area */
-.csv-upload-area {
-    margin: 12px 0;
-}
-
-.csv-upload-area input[type="file"] {
-    display: none;
-}
-
-#csvFileLabel {
-    display: inline-block;
-    cursor: pointer;
-    background: #3b82f6;
-    color: white;
-    padding: 8px 18px;
-    border-radius: 6px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-}
-
-#csvFileLabel:hover {
-    background: #2563eb;
-}
-
-#csvStatus {
-    margin: 8px 0;
-    font-size: 0.85rem;
-}
-
-/* CSV Preview */
-.csv-preview-wrap {
-    margin-top: 12px;
-    text-align: left;
-}
-
-.csv-preview-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-    color: #6b7280;
-}
-
-/* Scrollable CSV table */
-.csv-table-wrap {
-    overflow-x: auto;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-}
-
-.csv-data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-.csv-data-table th {
-    background: #f9fafb;
-    color: #374151;
-    font-weight: 600;
-    padding: 6px 10px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-}
-
-.csv-data-table td {
-    padding: 5px 10px;
-    color: #1f2937;
-    border-bottom: 1px solid #f3f4f6;
-}
-
-.csv-data-table tbody tr:hover {
-    background: #f0f7ff;
-}
-
-/* Also make the subtitle code tag wrap nicely */
-.subtitle code {
-    display: block;
-    font-size: 0.72rem;
-    background: #f3f4f6;
-    padding: 6px 10px;
-    border-radius: 6px;
-    margin-top: 6px;
-    word-break: break-word;
-    white-space: normal;
-    text-align: left;
-    color: #374151;
-}
-
-/* ── XLSX Upload Section ──────────────────────────────────────────────────── */
+/* ── XLSX File Picker ────────────────────────────────────────────────────────── */
 .xlsx-upload-area {
-    margin: 16px 0 8px;
+    text-align: center;
+    margin-bottom: 14px;
 }
 
 .xlsx-upload-area input[type="file"] {
@@ -296,91 +54,157 @@ button.selected {
     cursor: pointer;
     background: #7c3aed;
     color: white;
-    padding: 10px 22px;
+    padding: 12px 28px;
     border-radius: 8px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
 }
 
 #xlsxFileLabel:hover {
     background: #6d28d9;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
+/* ── Status Messages ─────────────────────────────────────────────────────────── */
 #xlsxStatus {
-    margin: 8px 0;
-    font-size: 0.85rem;
+    text-align: center;
+    margin: 8px 0 14px;
+    font-size: 0.87rem;
+    min-height: 20px;
 }
 
-/* Confirmation card */
+.status-ok  { color: #059669; font-weight: 600; }
+.status-err { color: #dc2626; font-weight: 600; }
+
+/* ── Confirmation Card ───────────────────────────────────────────────────────── */
 .confirm-card {
-    margin-top: 16px;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-    padding: 16px;
-    text-align: left;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+}
+
+.confirm-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #374151;
+    margin: 0 0 14px;
 }
 
 .confirm-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px 20px;
-    margin-bottom: 14px;
+    gap: 12px 24px;
+    margin-bottom: 16px;
 }
 
 .confirm-item {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
 .confirm-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: #6b7280;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #9ca3af;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
 }
 
 .confirm-value {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     color: #111827;
-    font-weight: 500;
+    font-weight: 600;
     word-break: break-all;
 }
 
-/* Preview details/summary toggle */
+/* ── Preview ─────────────────────────────────────────────────────────────────── */
 .preview-details {
-    margin: 10px 0 14px;
+    margin-bottom: 16px;
     font-size: 0.82rem;
-    color: #374151;
 }
 
 .preview-details summary {
     cursor: pointer;
     font-weight: 600;
     color: #4471c9;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    user-select: none;
 }
 
 .preview-scroll {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 180px;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
-    max-height: 180px;
-    overflow-y: auto;
 }
 
-/* Result card after upload */
+.csv-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.csv-data-table th {
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    position: sticky;
+    top: 0;
+}
+
+.csv-data-table td {
+    padding: 5px 10px;
+    color: #1f2937;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.csv-data-table tbody tr:hover {
+    background: #eff6ff;
+}
+
+/* ── Upload Button ───────────────────────────────────────────────────────────── */
+#xlsxUploadBtn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+#xlsxUploadBtn:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+#xlsxUploadBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Result Card ─────────────────────────────────────────────────────────────── */
 .result-card {
     margin-top: 14px;
-    padding: 14px 18px;
-    border-radius: 8px;
-    font-size: 0.92rem;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
     font-weight: 500;
-    text-align: left;
+    text-align: center;
 }
 
 .result-success {
@@ -393,10 +217,4 @@ button.selected {
     background: #fef2f2;
     border: 1px solid #fca5a5;
     color: #991b1b;
-}
-
-/* Wider container to accommodate XLSX preview table */
-.container {
-    width: 600px;
-    max-width: 95vw;
 }

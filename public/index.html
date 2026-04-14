@@ -4,151 +4,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Data Dashboard</title>
-    <meta name="description" content="USAFA NASA ECE 499 — Flight Telemetry Data Dashboard">
+    <title>Flight Telemetry Upload</title>
+    <meta name="description" content="USAFA NASA ECE 499 — Flight Telemetry XLSX Upload">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- SheetJS for XLSX parsing (client-side) -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <h1>Flight Data Dashboard</h1>
-
-        <div class="tabs">
-            <button id="viewTabBtn" class="tab-btn active">View Flights</button>
-            <button id="addTabBtn" class="tab-btn">Add Flight Record</button>
-            <button id="xlsxTabBtn" class="tab-btn">Upload XLSX</button>
+        <div class="header">
+            <h1>Flight Telemetry Upload</h1>
+            <p class="subtitle">Upload a <strong>.xlsx</strong> telemetry file to store in the database.</p>
         </div>
 
-        <!-- ── VIEW / READ SECTION ── -->
-        <div id="viewSection" class="section">
-
-            <!-- Mode toggle -->
-            <div class="view-toggle">
-                <button id="dbModeBtn" class="mode-btn active">From Database</button>
-                <button id="csvModeBtn" class="mode-btn">From CSV</button>
-            </div>
-
-            <!-- Database mode -->
-            <div id="dbMode">
-                <p class="subtitle">Select a flight record to view</p>
-                <div class="selector-group">
-                    <button id="pickUserBtn1">1</button>
-                    <button id="pickUserBtn2">2</button>
-                    <button id="pickUserBtn3">3</button>
-                    <button id="pickUserBtn4">4</button>
-                    <button id="pickUserBtn5">5</button>
-                    <button id="pickUserBtn6">6</button>
-                </div>
-                <button id="loadBtn">Load Flight Record</button>
-                <div id="userList" class="user-list"></div>
-            </div>
-
-            <!-- CSV mode -->
-            <div id="csvMode" style="display:none;">
-                <p class="subtitle">
-                    Upload a CSV with columns:<br>
-                    <code>flight_number, drone_type, flight_time, power_watts, current_amps, batterytemp, ambianttemp, airspeed, winddirection_rad, windspeed_mps</code>
-                </p>
-                <div class="csv-upload-area">
-                    <input type="file" id="csvFileInput" accept=".csv">
-                    <label for="csvFileInput" id="csvFileLabel">📂 Choose CSV File</label>
-                </div>
-                <div id="csvStatus"></div>
-                <div id="csvPreview" class="csv-preview-wrap" style="display:none;">
-                    <div class="csv-preview-header">
-                        <span id="csvRowCount"></span>
-                        <button id="uploadToDbBtn">⬆ Upload to Database</button>
-                    </div>
-                    <div class="csv-table-wrap">
-                        <table id="csvTable" class="csv-data-table"></table>
-                    </div>
-                </div>
-            </div>
+        <!-- File Picker -->
+        <div class="xlsx-upload-area">
+            <input type="file" id="xlsxFileInput" accept=".xlsx,.xls">
+            <label for="xlsxFileInput" id="xlsxFileLabel">📂 Choose XLSX File</label>
         </div>
 
-        <!-- ── ADD SINGLE RECORD SECTION ── -->
-        <div id="addSection" class="section" style="display:none;">
-            <p class="subtitle">Add a new flight record to the database</p>
-            <div class="form-group">
-                <input type="number" id="newFlightNumber" placeholder="Flight Number">
-                <input type="text" id="newDroneType" placeholder="Drone Type">
-                <input type="datetime-local" id="newCurrentTime" placeholder="Flight Time">
-                <input type="number" step="any" id="newPowerWatts" placeholder="Power (Watts)">
-                <input type="number" step="any" id="newCurrentAmps" placeholder="Current (Amps)">
-                <input type="number" step="any" id="newBatteryTemp" placeholder="Battery Temp (°C)">
-                <input type="number" step="any" id="newAmbiantTemp" placeholder="Ambient Temp (°C)">
-                <input type="number" step="any" id="newAirSpeed" placeholder="Air Speed (m/s)">
-                <input type="number" step="any" id="newWindDirection" placeholder="Wind Direction (rad)">
-                <input type="number" step="any" id="newWindSpeed" placeholder="Wind Speed (m/s)">
-                <button id="submitBtn">Save Flight Record</button>
-            </div>
-            <div id="formStatus"></div>
-        </div>
+        <div id="xlsxStatus"></div>
 
-        <!-- ── XLSX UPLOAD SECTION ── -->
-        <div id="xlsxSection" class="section" style="display:none;">
-            <p class="subtitle">
-                Upload a telemetry <strong>.xlsx</strong> file to store in the database.<br>
-                The dashboard will confirm the data was received — no need to display every row.
-            </p>
-
-            <div class="xlsx-upload-area">
-                <input type="file" id="xlsxFileInput" accept=".xlsx,.xls">
-                <label for="xlsxFileInput" id="xlsxFileLabel">📂 Choose XLSX File</label>
-            </div>
-
-            <div id="xlsxStatus"></div>
-
-            <!-- Confirmation card — shown after parsing, before upload -->
-            <div id="xlsxConfirm" class="confirm-card" style="display:none;">
-                <div class="confirm-grid">
-                    <div class="confirm-item">
-                        <span class="confirm-label">File</span>
-                        <span id="confirmFileName" class="confirm-value">—</span>
-                    </div>
-                    <div class="confirm-item">
-                        <span class="confirm-label">Rows</span>
-                        <span id="confirmRowCount" class="confirm-value">—</span>
-                    </div>
-                    <div class="confirm-item">
-                        <span class="confirm-label">Columns</span>
-                        <span id="confirmColCount" class="confirm-value">—</span>
-                    </div>
-                    <div class="confirm-item">
-                        <span class="confirm-label">Time Range</span>
-                        <span id="confirmTimeRange" class="confirm-value">—</span>
-                    </div>
-                    <div class="confirm-item">
-                        <span class="confirm-label">GPS Synced</span>
-                        <span id="confirmGpsSynced" class="confirm-value">—</span>
-                    </div>
-                    <div class="confirm-item">
-                        <span class="confirm-label">Avg Battery V</span>
-                        <span id="confirmAvgVolt" class="confirm-value">—</span>
-                    </div>
+        <!-- Confirmation card — shown after parsing, before upload -->
+        <div id="xlsxConfirm" class="confirm-card" style="display:none;">
+            <h2 class="confirm-title">File Summary</h2>
+            <div class="confirm-grid">
+                <div class="confirm-item">
+                    <span class="confirm-label">File</span>
+                    <span id="confirmFileName" class="confirm-value">—</span>
                 </div>
-
-                <!-- First 3 rows preview -->
-                <details class="preview-details">
-                    <summary>Preview first 3 rows</summary>
-                    <div class="preview-scroll">
-                        <table id="xlsxPreviewTable" class="csv-data-table"></table>
-                    </div>
-                </details>
-
-                <button id="xlsxUploadBtn">⬆ Upload to Database</button>
+                <div class="confirm-item">
+                    <span class="confirm-label">Rows</span>
+                    <span id="confirmRowCount" class="confirm-value">—</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Columns</span>
+                    <span id="confirmColCount" class="confirm-value">—</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Time Range</span>
+                    <span id="confirmTimeRange" class="confirm-value">—</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">GPS Synced Rows</span>
+                    <span id="confirmGpsSynced" class="confirm-value">—</span>
+                </div>
+                <div class="confirm-item">
+                    <span class="confirm-label">Avg Battery Voltage</span>
+                    <span id="confirmAvgVolt" class="confirm-value">—</span>
+                </div>
             </div>
 
-            <!-- Result shown after upload -->
-            <div id="xlsxResult" style="display:none;" class="result-card">
-                <span id="xlsxResultText"></span>
-            </div>
+            <!-- First 3 rows preview -->
+            <details class="preview-details">
+                <summary>Preview first 3 rows</summary>
+                <div class="preview-scroll">
+                    <table id="xlsxPreviewTable" class="csv-data-table"></table>
+                </div>
+            </details>
+
+            <button id="xlsxUploadBtn">⬆ Upload to Database</button>
         </div>
 
+        <!-- Result shown after upload -->
+        <div id="xlsxResult" style="display:none;" class="result-card">
+            <span id="xlsxResultText"></span>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 
