@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flight Data Dashboard</title>
+    <meta name="description" content="USAFA NASA ECE 499 — Flight Telemetry Data Dashboard">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- SheetJS for XLSX parsing (client-side) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -16,9 +19,10 @@
         <div class="tabs">
             <button id="viewTabBtn" class="tab-btn active">View Flights</button>
             <button id="addTabBtn" class="tab-btn">Add Flight Record</button>
+            <button id="xlsxTabBtn" class="tab-btn">Upload XLSX</button>
         </div>
 
-        <!-- VIEW / READ SECTION -->
+        <!-- ── VIEW / READ SECTION ── -->
         <div id="viewSection" class="section">
 
             <!-- Mode toggle -->
@@ -65,7 +69,7 @@
             </div>
         </div>
 
-        <!-- ADD SECTION -->
+        <!-- ── ADD SINGLE RECORD SECTION ── -->
         <div id="addSection" class="section" style="display:none;">
             <p class="subtitle">Add a new flight record to the database</p>
             <div class="form-group">
@@ -83,6 +87,67 @@
             </div>
             <div id="formStatus"></div>
         </div>
+
+        <!-- ── XLSX UPLOAD SECTION ── -->
+        <div id="xlsxSection" class="section" style="display:none;">
+            <p class="subtitle">
+                Upload a telemetry <strong>.xlsx</strong> file to store in the database.<br>
+                The dashboard will confirm the data was received — no need to display every row.
+            </p>
+
+            <div class="xlsx-upload-area">
+                <input type="file" id="xlsxFileInput" accept=".xlsx,.xls">
+                <label for="xlsxFileInput" id="xlsxFileLabel">📂 Choose XLSX File</label>
+            </div>
+
+            <div id="xlsxStatus"></div>
+
+            <!-- Confirmation card — shown after parsing, before upload -->
+            <div id="xlsxConfirm" class="confirm-card" style="display:none;">
+                <div class="confirm-grid">
+                    <div class="confirm-item">
+                        <span class="confirm-label">File</span>
+                        <span id="confirmFileName" class="confirm-value">—</span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Rows</span>
+                        <span id="confirmRowCount" class="confirm-value">—</span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Columns</span>
+                        <span id="confirmColCount" class="confirm-value">—</span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Time Range</span>
+                        <span id="confirmTimeRange" class="confirm-value">—</span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">GPS Synced</span>
+                        <span id="confirmGpsSynced" class="confirm-value">—</span>
+                    </div>
+                    <div class="confirm-item">
+                        <span class="confirm-label">Avg Battery V</span>
+                        <span id="confirmAvgVolt" class="confirm-value">—</span>
+                    </div>
+                </div>
+
+                <!-- First 3 rows preview -->
+                <details class="preview-details">
+                    <summary>Preview first 3 rows</summary>
+                    <div class="preview-scroll">
+                        <table id="xlsxPreviewTable" class="csv-data-table"></table>
+                    </div>
+                </details>
+
+                <button id="xlsxUploadBtn">⬆ Upload to Database</button>
+            </div>
+
+            <!-- Result shown after upload -->
+            <div id="xlsxResult" style="display:none;" class="result-card">
+                <span id="xlsxResultText"></span>
+            </div>
+        </div>
+
     </div>
     <script src="script.js"></script>
 </body>

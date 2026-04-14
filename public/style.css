@@ -281,3 +281,122 @@ button.selected {
     text-align: left;
     color: #374151;
 }
+
+/* ── XLSX Upload Section ──────────────────────────────────────────────────── */
+.xlsx-upload-area {
+    margin: 16px 0 8px;
+}
+
+.xlsx-upload-area input[type="file"] {
+    display: none;
+}
+
+#xlsxFileLabel {
+    display: inline-block;
+    cursor: pointer;
+    background: #7c3aed;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s, transform 0.15s;
+}
+
+#xlsxFileLabel:hover {
+    background: #6d28d9;
+    transform: translateY(-1px);
+}
+
+#xlsxStatus {
+    margin: 8px 0;
+    font-size: 0.85rem;
+}
+
+/* Confirmation card */
+.confirm-card {
+    margin-top: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: left;
+}
+
+.confirm-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    margin-bottom: 14px;
+}
+
+.confirm-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.confirm-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.confirm-value {
+    font-size: 0.88rem;
+    color: #111827;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+/* Preview details/summary toggle */
+.preview-details {
+    margin: 10px 0 14px;
+    font-size: 0.82rem;
+    color: #374151;
+}
+
+.preview-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #4471c9;
+    margin-bottom: 6px;
+}
+
+.preview-scroll {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+/* Result card after upload */
+.result-card {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+.result-success {
+    background: #ecfdf5;
+    border: 1px solid #6ee7b7;
+    color: #065f46;
+}
+
+.result-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+}
+
+/* Wider container to accommodate XLSX preview table */
+.container {
+    width: 600px;
+    max-width: 95vw;
+}
