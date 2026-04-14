@@ -1,13 +1,19 @@
-// ── Elements ──────────────────────────────────────────────────────────────────
-const xlsxFileInput  = document.getElementById('xlsxFileInput');
-const xlsxFileLabel  = document.getElementById('xlsxFileLabel');
-const xlsxStatus     = document.getElementById('xlsxStatus');
-const xlsxConfirm    = document.getElementById('xlsxConfirm');
-const xlsxUploadBtn  = document.getElementById('xlsxUploadBtn');
-const xlsxResult     = document.getElementById('xlsxResult');
-const xlsxResultText = document.getElementById('xlsxResultText');
+// ═══════════════════════════════════════════════════════════════════════════
+// Tab Management
+// ═══════════════════════════════════════════════════════════════════════════
+function switchTab(tab) {
+    document.getElementById('sectionUpload').style.display = tab === 'upload' ? 'block' : 'none';
+    document.getElementById('sectionView').style.display   = tab === 'view'   ? 'block' : 'none';
+    document.getElementById('tabUpload').classList.toggle('active', tab === 'upload');
+    document.getElementById('tabView').classList.toggle('active',   tab === 'view');
 
-// ── Column Mapping: XLSX header → Supabase column name ────────────────────────
+    // Load flight list when switching to View tab
+    if (tab === 'view') loadFlightList();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// XLSX Upload — Column Map & Type Sets
+// ═══════════════════════════════════════════════════════════════════════════
 const XLSX_COLUMN_MAP = {
     'Min-Sec':                    'min_sec',
     'RTC_UTC':                    'rtc_utc',
@@ -71,23 +77,19 @@ let parsedXlsxRecords = [];
 // ── XLSX Parsing (SheetJS) ────────────────────────────────────────────────────
 function parseXLSX(arrayBuffer) {
     const workbook  = XLSX.read(arrayBuffer, { type: 'array', cellDates: true });
-    const sheetName = workbook.SheetNames[0];
-    const sheet     = workbook.Sheets[sheetName];
+    const sheet     = workbook.Sheets[workbook.SheetNames[0]];
     const rawRows   = XLSX.utils.sheet_to_json(sheet, { defval: null, raw: false });
 
     if (rawRows.length === 0) throw new Error('The XLSX file appears to be empty.');
 
     return rawRows.map((row) => {
         const record = {};
-
         for (const [xlsxHeader, dbCol] of Object.entries(XLSX_COLUMN_MAP)) {
-            // Try exact key first, then trimmed key match
             let rawVal = row[xlsxHeader];
             if (rawVal === undefined) {
-                const matchedKey = Object.keys(row).find(k => k.trim() === xlsxHeader.trim());
-                rawVal = matchedKey !== undefined ? row[matchedKey] : null;
+                const k = Object.keys(row).find(k => k.trim() === xlsxHeader.trim());
+                rawVal = k !== undefined ? row[k] : null;
             }
-
             if (rawVal === null || rawVal === undefined || rawVal === '') {
                 record[dbCol] = null;
             } else if (BOOLEAN_COLS.has(dbCol)) {
@@ -100,23 +102,18 @@ function parseXLSX(arrayBuffer) {
                 record[dbCol] = String(rawVal).trim();
             }
         }
-
         return record;
     });
 }
 
-// ── Render preview table (first 3 rows) ──────────────────────────────────────
 function renderXLSXPreview(records) {
-    const previewRows = records.slice(0, 3);
     const cols  = Object.values(XLSX_COLUMN_MAP);
+    const rows  = records.slice(0, 3);
     const thead = `<thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>`;
-    const rows  = previewRows.map(r =>
-        `<tr>${cols.map(c => `<td>${r[c] ?? ''}</td>`).join('')}</tr>`
-    ).join('');
-    document.getElementById('xlsxPreviewTable').innerHTML = thead + `<tbody>${rows}</tbody>`;
+    const tbody = rows.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? ''}</td>`).join('')}</tr>`).join('');
+    document.getElementById('xlsxPreviewTable').innerHTML = thead + `<tbody>${tbody}</tbody>`;
 }
 
-// ── Populate confirmation card ────────────────────────────────────────────────
 function populateConfirmCard(records, fileName) {
     document.getElementById('confirmFileName').textContent = fileName;
     document.getElementById('confirmRowCount').textContent = records.length.toLocaleString();
@@ -136,16 +133,16 @@ function populateConfirmCard(records, fileName) {
     }
 }
 
-// ── File input handler ────────────────────────────────────────────────────────
-xlsxFileInput.addEventListener('change', () => {
-    const file = xlsxFileInput.files[0];
+// ── XLSX File Input ───────────────────────────────────────────────────────────
+document.getElementById('xlsxFileInput').addEventListener('change', () => {
+    const file = document.getElementById('xlsxFileInput').files[0];
     if (!file) return;
 
-    xlsxFileLabel.textContent   = `📄 ${file.name}`;
-    xlsxStatus.innerHTML        = '';
-    xlsxConfirm.style.display   = 'none';
-    xlsxResult.style.display    = 'none';
-    parsedXlsxRecords           = [];
+    document.getElementById('xlsxFileLabel').textContent = `📄 ${file.name}`;
+    document.getElementById('xlsxStatus').innerHTML      = '';
+    document.getElementById('xlsxConfirm').style.display = 'none';
+    document.getElementById('xlsxResult').style.display  = 'none';
+    parsedXlsxRecords = [];
 
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -153,24 +150,25 @@ xlsxFileInput.addEventListener('change', () => {
             parsedXlsxRecords = parseXLSX(e.target.result);
             populateConfirmCard(parsedXlsxRecords, file.name);
             renderXLSXPreview(parsedXlsxRecords);
-            xlsxConfirm.style.display = 'block';
-            xlsxStatus.innerHTML =
+            document.getElementById('xlsxConfirm').style.display = 'block';
+            document.getElementById('xlsxStatus').innerHTML =
                 `<span class="status-ok">✔ File parsed — ${parsedXlsxRecords.length.toLocaleString()} rows ready.</span>`;
         } catch (err) {
-            xlsxStatus.innerHTML = `<span class="status-err">❌ Error: ${err.message}</span>`;
+            document.getElementById('xlsxStatus').innerHTML =
+                `<span class="status-err">❌ Error: ${err.message}</span>`;
             console.error(err);
         }
     };
     reader.readAsArrayBuffer(file);
 });
 
-// ── Upload to Supabase via /api/upload_xlsx ───────────────────────────────────
-xlsxUploadBtn.addEventListener('click', async () => {
+// ── Upload XLSX to Supabase ───────────────────────────────────────────────────
+document.getElementById('xlsxUploadBtn').addEventListener('click', async () => {
     if (parsedXlsxRecords.length === 0) return;
-
-    xlsxUploadBtn.textContent = 'Uploading...';
-    xlsxUploadBtn.disabled    = true;
-    xlsxStatus.innerHTML      = '';
+    const btn = document.getElementById('xlsxUploadBtn');
+    btn.textContent = 'Uploading...';
+    btn.disabled    = true;
+    document.getElementById('xlsxStatus').innerHTML = '';
 
     try {
         const response = await fetch('/api/upload_xlsx', {
@@ -178,23 +176,166 @@ xlsxUploadBtn.addEventListener('click', async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ records: parsedXlsxRecords })
         });
-
         const result = await response.json();
         if (!response.ok) throw new Error(result.error || 'Upload failed');
 
-        xlsxResult.style.display = 'block';
-        xlsxResult.className     = 'result-card result-success';
-        xlsxResultText.innerHTML =
+        const resultEl = document.getElementById('xlsxResult');
+        resultEl.style.display = 'block';
+        resultEl.className     = 'result-card result-success';
+        document.getElementById('xlsxResultText').innerHTML =
             `✅ <strong>${result.inserted.toLocaleString()}</strong> telemetry row(s) successfully stored in Supabase.`;
-
-        xlsxConfirm.style.display = 'none';
+        document.getElementById('xlsxConfirm').style.display = 'none';
     } catch (err) {
-        xlsxResult.style.display = 'block';
-        xlsxResult.className     = 'result-card result-error';
-        xlsxResultText.innerHTML = `❌ Upload failed: ${err.message}`;
+        const resultEl = document.getElementById('xlsxResult');
+        resultEl.style.display = 'block';
+        resultEl.className     = 'result-card result-error';
+        document.getElementById('xlsxResultText').innerHTML = `❌ Upload failed: ${err.message}`;
         console.error(err);
     } finally {
-        xlsxUploadBtn.textContent = '⬆ Upload to Database';
-        xlsxUploadBtn.disabled    = false;
+        btn.textContent = '⬆ Upload to Database';
+        btn.disabled    = false;
     }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VIEW FLIGHT — Charter plots
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Track chart instances so we can destroy before re-creating
+const chartInstances = {};
+
+const CHART_CONFIGS = [
+    { canvasId: 'chartBattTemp',   field: 'battery_temp_c', label: 'Battery Temp',  color: '#f97316', unit: '°C'  },
+    { canvasId: 'chartPMVolt',     field: 'pm_voltage_v',   label: 'PM Voltage',    color: '#3b82f6', unit: 'V'   },
+    { canvasId: 'chartPMPower',    field: 'pm_power_w',     label: 'PM Power',      color: '#8b5cf6', unit: 'W'   },
+    { canvasId: 'chartPMCurrent',  field: 'pm_current_a',   label: 'PM Current',    color: '#10b981', unit: 'A'   },
+];
+
+// ── Load the list of available flights into the <select> ─────────────────────
+async function loadFlightList() {
+    const select = document.getElementById('flightSelect');
+    const status = document.getElementById('flightStatus');
+    select.innerHTML = '<option value="">Loading…</option>';
+    select.disabled  = true;
+
+    try {
+        const res  = await fetch('/api/list_flights');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load flights');
+
+        if (data.length === 0) {
+            select.innerHTML = '<option value="">No flights uploaded yet</option>';
+            return;
+        }
+
+        select.innerHTML = '<option value="">— Select a flight —</option>' +
+            data.map((f, i) => {
+                const dt = new Date(f.uploaded_at).toLocaleString();
+                return `<option value="${f.uploaded_at}">Flight ${i + 1} — ${dt} (${f.row_count.toLocaleString()} rows)</option>`;
+            }).join('');
+        select.disabled = false;
+    } catch (err) {
+        status.innerHTML = `<span class="status-err">❌ ${err.message}</span>`;
+        console.error(err);
+    }
+}
+
+// ── Fetch telemetry for selected flight and render charts ─────────────────────
+document.getElementById('loadFlightBtn').addEventListener('click', async () => {
+    const uploadedAt = document.getElementById('flightSelect').value;
+    const status     = document.getElementById('flightStatus');
+    const btn        = document.getElementById('loadFlightBtn');
+
+    if (!uploadedAt) {
+        status.innerHTML = '<span class="status-err">Please select a flight first.</span>';
+        return;
+    }
+
+    status.innerHTML = '<span class="status-ok">Loading telemetry…</span>';
+    btn.disabled     = true;
+    btn.textContent  = 'Loading…';
+    document.getElementById('chartsGrid').style.display = 'none';
+
+    try {
+        const res  = await fetch(`/api/get_flight?uploaded_at=${encodeURIComponent(uploadedAt)}`);
+        const rows = await res.json();
+        if (!res.ok) throw new Error(rows.error || 'Failed to fetch flight data');
+
+        if (rows.length === 0) {
+            status.innerHTML = '<span class="status-err">No data found for this flight.</span>';
+            return;
+        }
+
+        // Build time labels — use rtc_utc, fall back to row index
+        const labels = rows.map(r => r.rtc_utc ? new Date(r.rtc_utc) : null);
+
+        // Render each chart
+        CHART_CONFIGS.forEach(({ canvasId, field, label, color, unit }) => {
+            const values = rows.map(r => r[field]);
+            renderChart(canvasId, labels, values, label, color, unit);
+        });
+
+        document.getElementById('chartsGrid').style.display = 'grid';
+        status.innerHTML = `<span class="status-ok">✔ Loaded ${rows.length.toLocaleString()} rows.</span>`;
+    } catch (err) {
+        status.innerHTML = `<span class="status-err">❌ ${err.message}</span>`;
+        console.error(err);
+    } finally {
+        btn.disabled    = false;
+        btn.textContent = 'Load Flight';
+    }
+});
+
+// ── Build / replace a single Chart.js chart ───────────────────────────────────
+function renderChart(canvasId, labels, values, label, color, unit) {
+    // Destroy previous instance if it exists
+    if (chartInstances[canvasId]) {
+        chartInstances[canvasId].destroy();
+    }
+
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    chartInstances[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: `${label} (${unit})`,
+                data: values,
+                borderColor: color,
+                backgroundColor: color + '22',
+                borderWidth: 1.5,
+                pointRadius: 0,
+                tension: 0.2,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => `${ctx.parsed.y !== null ? ctx.parsed.y.toFixed(3) : '—'} ${unit}`
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: { tooltipFormat: 'HH:mm:ss', displayFormats: { second: 'HH:mm:ss', minute: 'HH:mm' } },
+                    title: { display: true, text: 'RTC UTC', font: { size: 11 } },
+                    ticks: { maxTicksLimit: 8, font: { size: 10 } },
+                    grid: { color: '#f3f4f6' }
+                },
+                y: {
+                    title: { display: true, text: `${label} (${unit})`, font: { size: 11 } },
+                    ticks: { font: { size: 10 } },
+                    grid: { color: '#f3f4f6' }
+                }
+            }
+        }
+    });
+}
