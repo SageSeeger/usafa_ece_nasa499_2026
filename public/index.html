@@ -18,19 +18,51 @@
             <button id="addTabBtn" class="tab-btn">Add Flight Record</button>
         </div>
 
-        <!-- VIEW SECTION -->
+        <!-- VIEW / READ SECTION -->
         <div id="viewSection" class="section">
-            <p class="subtitle">Select a flight record to view</p>
-            <div class="selector-group">
-                <button id="pickUserBtn1">1</button>
-                <button id="pickUserBtn2">2</button>
-                <button id="pickUserBtn3">3</button>
-                <button id="pickUserBtn4">4</button>
-                <button id="pickUserBtn5">5</button>
-                <button id="pickUserBtn6">6</button>
+
+            <!-- Mode toggle -->
+            <div class="view-toggle">
+                <button id="dbModeBtn" class="mode-btn active">From Database</button>
+                <button id="csvModeBtn" class="mode-btn">From CSV</button>
             </div>
-            <button id="loadBtn">Load Flight Record</button>
-            <div id="userList" class="user-list"></div>
+
+            <!-- Database mode -->
+            <div id="dbMode">
+                <p class="subtitle">Select a flight record to view</p>
+                <div class="selector-group">
+                    <button id="pickUserBtn1">1</button>
+                    <button id="pickUserBtn2">2</button>
+                    <button id="pickUserBtn3">3</button>
+                    <button id="pickUserBtn4">4</button>
+                    <button id="pickUserBtn5">5</button>
+                    <button id="pickUserBtn6">6</button>
+                </div>
+                <button id="loadBtn">Load Flight Record</button>
+                <div id="userList" class="user-list"></div>
+            </div>
+
+            <!-- CSV mode -->
+            <div id="csvMode" style="display:none;">
+                <p class="subtitle">
+                    Upload a CSV with columns:<br>
+                    <code>flight_number, drone_type, flight_time, power_watts, current_amps, batterytemp, ambianttemp, airspeed, winddirection_rad, windspeed_mps</code>
+                </p>
+                <div class="csv-upload-area">
+                    <input type="file" id="csvFileInput" accept=".csv">
+                    <label for="csvFileInput" id="csvFileLabel">📂 Choose CSV File</label>
+                </div>
+                <div id="csvStatus"></div>
+                <div id="csvPreview" class="csv-preview-wrap" style="display:none;">
+                    <div class="csv-preview-header">
+                        <span id="csvRowCount"></span>
+                        <button id="uploadToDbBtn">⬆ Upload to Database</button>
+                    </div>
+                    <div class="csv-table-wrap">
+                        <table id="csvTable" class="csv-data-table"></table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ADD SECTION -->
@@ -39,7 +71,7 @@
             <div class="form-group">
                 <input type="number" id="newFlightNumber" placeholder="Flight Number">
                 <input type="text" id="newDroneType" placeholder="Drone Type">
-                <input type="datetime-local" id="newCurrentTime" placeholder="Current Time">
+                <input type="datetime-local" id="newCurrentTime" placeholder="Flight Time">
                 <input type="number" step="any" id="newPowerWatts" placeholder="Power (Watts)">
                 <input type="number" step="any" id="newCurrentAmps" placeholder="Current (Amps)">
                 <input type="number" step="any" id="newBatteryTemp" placeholder="Battery Temp (°C)">

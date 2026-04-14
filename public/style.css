@@ -163,3 +163,121 @@ button.selected {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
+
+/* View mode toggle (DB vs CSV) */
+.view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.mode-btn {
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.mode-btn:hover {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.mode-btn.active {
+    background: #3b82f6;
+    color: white;
+}
+
+/* CSV Upload Area */
+.csv-upload-area {
+    margin: 12px 0;
+}
+
+.csv-upload-area input[type="file"] {
+    display: none;
+}
+
+#csvFileLabel {
+    display: inline-block;
+    cursor: pointer;
+    background: #3b82f6;
+    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+#csvFileLabel:hover {
+    background: #2563eb;
+}
+
+#csvStatus {
+    margin: 8px 0;
+    font-size: 0.85rem;
+}
+
+/* CSV Preview */
+.csv-preview-wrap {
+    margin-top: 12px;
+    text-align: left;
+}
+
+.csv-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+/* Scrollable CSV table */
+.csv-table-wrap {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.csv-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.csv-data-table th {
+    background: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.csv-data-table td {
+    padding: 5px 10px;
+    color: #1f2937;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.csv-data-table tbody tr:hover {
+    background: #f0f7ff;
+}
+
+/* Also make the subtitle code tag wrap nicely */
+.subtitle code {
+    display: block;
+    font-size: 0.72rem;
+    background: #f3f4f6;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 6px;
+    word-break: break-word;
+    white-space: normal;
+    text-align: left;
+    color: #374151;
+}
