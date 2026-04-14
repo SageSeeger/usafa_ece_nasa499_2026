@@ -20,9 +20,15 @@ module.exports = async (req, res) => {
         // Insert in batches of 500 to avoid payload limits
         const BATCH_SIZE = 500;
         let totalInserted = 0;
+        
+        // Generate ONE timestamp for this entire upload so all batches are grouped as one flight
+        const sessionTime = new Date().toISOString();
 
         for (let i = 0; i < records.length; i += BATCH_SIZE) {
-            const batch = records.slice(i, i + BATCH_SIZE);
+            const batch = records.slice(i, i + BATCH_SIZE).map(record => ({
+                ...record,
+                uploaded_at: sessionTime
+            }));
             const { data, error } = await supabase
                 .from('flight_telemetry')
                 .insert(batch)
